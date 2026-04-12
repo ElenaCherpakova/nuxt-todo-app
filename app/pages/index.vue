@@ -3,19 +3,7 @@
     <h1>📝 My To-Do List</h1>
 
     <!--ADD A TASK-->
-    <div class="input-row">
-      <InputText
-        v-model="newTodo"
-        placeholder="What do you need to do?"
-        @keyup.enter="addTodo"
-      />
-      <Button
-        label="Add"
-        icon="pi pi-plus"
-        @click="addTodo"
-        :disabled="isInputEmpty"
-      />
-    </div>
+    <TodoInput @add-todo="addTodo" />
     <p v-if="todos.length === 0" class="empty">No task yet. Add one above!</p>
 
     <div v-else class="todo-list">
@@ -52,7 +40,6 @@ export default defineComponent({
   name: "TodoPage",
   data() {
     return {
-      newTodo: "" as string,
       todos: [
         { id: "1", text: "do laundry", completed: false },
         { id: "2", text: "walk the dog", completed: true },
@@ -61,8 +48,7 @@ export default defineComponent({
   },
 
   methods: {
-    addTodo(): void {
-      const text = this.newTodo.trim();
+    addTodo(text: string): void {
       if (!text) return;
       const newTodo = {
         id: uuidv4(),
@@ -70,16 +56,9 @@ export default defineComponent({
         completed: false,
       };
       this.todos.unshift(newTodo);
-      this.newTodo = "";
     },
     deleteTodo(id: string): void {
       this.todos = this.todos.filter((todo: Todo) => todo.id !== id);
-    },
-  },
-
-  computed: {
-    isInputEmpty(): boolean {
-      return this.newTodo.trim() === "";
     },
   },
 });
@@ -95,15 +74,6 @@ export default defineComponent({
 h1 {
   text-align: center;
   margin-bottom: 24px;
-}
-.input-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-.input-row :deep(input) {
-  flex: 1;
-  width: 100%;
 }
 
 .empty {
