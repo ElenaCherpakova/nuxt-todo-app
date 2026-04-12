@@ -26,7 +26,6 @@ import { defineComponent } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import type { Todo } from "../types/todo";
 
-
 const STORAGE_KEY = "nuxt-todo-app";
 export default defineComponent({
   name: "TodoPage",
@@ -61,10 +60,26 @@ export default defineComponent({
         completed: false,
       };
       this.todos.unshift(newTodo);
+      this.$toast.add({
+        severity: "success",
+        summary: "Task added",
+        detail: `Task "${text}" was added`,
+        life: 1000,
+      });
     },
     deleteTodo(id: string): void {
+      const removedTodo = this.todos.find((todo: Todo) => todo.id === id);
       this.todos = this.todos.filter((todo: Todo) => todo.id !== id);
       if (this.editingId === id) this.editingId = null;
+
+      if (removedTodo) {
+        this.$toast.add({
+          severity: "warn",
+          summary: "Task deleted",
+          detail: `Task "${removedTodo.text}" was deleted`,
+          life: 1000,
+        });
+      }
     },
     toggleTodo(id: string): void {
       const todo = this.todos.find((todo: Todo) => todo.id === id);

@@ -6,7 +6,6 @@ interface Todo {
     completed: boolean
 }
 
-
 describe('Todo logic', () => {
     it('creates a todo with the correct shape', () => {
         const todo: Todo = { id: 'uuid-1', text: 'Walk the dog', completed: false }

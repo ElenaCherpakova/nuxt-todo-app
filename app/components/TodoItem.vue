@@ -67,7 +67,6 @@
 import { defineComponent, type PropType } from "vue";
 import type { Todo } from "../types/todo";
 
-
 export default defineComponent({
   name: "TodoItem",
   emits: ["toggle", "delete", "start-edit", "save-edit", "cancel-edit"],
@@ -92,7 +91,6 @@ export default defineComponent({
       this.$emit("save-edit", { id: this.todo.id, text });
     },
   },
-
 });
 </script>
 
