@@ -65,11 +65,8 @@
 
 <script lang="ts">
 import { defineComponent, type PropType } from "vue";
-interface Todo {
-  id: string;
-  text: string;
-  completed: boolean;
-}
+import type { Todo } from "../types/todo";
+
 
 export default defineComponent({
   name: "TodoItem",

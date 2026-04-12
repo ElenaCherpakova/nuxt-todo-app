@@ -24,12 +24,9 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { v4 as uuidv4 } from "uuid";
+import type { Todo } from "../types/todo";
 
-interface Todo {
-  id: string;
-  text: string;
-  completed: boolean;
-}
+
 const STORAGE_KEY = "nuxt-todo-app";
 export default defineComponent({
   name: "TodoPage",
