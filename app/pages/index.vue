@@ -10,8 +10,12 @@
         v-for="todo in todos"
         :key="todo.id"
         :todo="todo"
+        :isEditing="editingId === todo.id"
         @toggle="toggleTodo"
         @delete="deleteTodo"
+        @start-edit="startEdit"
+        @save-edit="saveEdit"
+        @cancel-edit="cancelEdit"
       />
     </div>
   </div>
@@ -26,12 +30,29 @@ interface Todo {
   text: string;
   completed: boolean;
 }
+const STORAGE_KEY = "nuxt-todo-app";
 export default defineComponent({
   name: "TodoPage",
   data() {
     return {
       todos: [] as Todo[],
+      editingId: null as string | null,
     };
+  },
+
+  watch: {
+    todos: {
+      deep: true,
+      handler(newTodos: Todo[]) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(newTodos));
+      },
+    },
+  },
+  mounted() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      this.todos = JSON.parse(saved) as Todo[];
+    }
   },
 
   methods: {
@@ -46,12 +67,23 @@ export default defineComponent({
     },
     deleteTodo(id: string): void {
       this.todos = this.todos.filter((todo: Todo) => todo.id !== id);
+      if (this.editingId === id) this.editingId = null;
     },
     toggleTodo(id: string): void {
-        const todo = this.todos.find((todo: Todo)=> todo.id === id)
-        if(todo) todo.completed = !todo.completed
-
-    }
+      const todo = this.todos.find((todo: Todo) => todo.id === id);
+      if (todo) todo.completed = !todo.completed;
+    },
+    startEdit(id: string): void {
+      this.editingId = id;
+    },
+    saveEdit({ id, text }: { id: string; text: string }): void {
+      const todo = this.todos.find((todo: Todo) => todo.id === id);
+      if (todo) todo.text = text;
+      this.editingId = null;
+    },
+    cancelEdit(): void {
+      this.editingId = null;
+    },
   },
 });
 </script>
@@ -79,5 +111,4 @@ h1 {
   flex-direction: column;
   gap: 8px;
 }
-
 </style>
